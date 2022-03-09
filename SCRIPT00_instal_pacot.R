@@ -29,3 +29,10 @@ if(sum(as.numeric(!pacotes %in% installed.packages())) != 0){
 
 
 theme_set(theme_pubr())
+
+
+# Base de dados
+load("bd.RData")
+load('cnesat.RData')
+load('cnesnot.RData')
+
