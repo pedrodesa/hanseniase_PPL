@@ -14,7 +14,11 @@ pacotes <- c('data.table',
              'knitr',
              'scales',
              'ggpubr',
-             'foreign'
+             'foreign',
+             "CGPfunctions",
+             "treemapify",
+             "RColorBrewer",
+             "colorspace"
              )
 
 if(sum(as.numeric(!pacotes %in% installed.packages())) != 0){
@@ -35,4 +39,3 @@ theme_set(theme_pubr())
 load("bd.RData")
 load('cnesat.RData')
 load('cnesnot.RData')
-
