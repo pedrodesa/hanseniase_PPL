@@ -1,103 +1,22 @@
 ####################################
 glimpse(bd)
 
-# SEXO
-bd %>%
-  filter(MODOENTR == 1, !is.na(sexo)) %>%
-  group_by(sexo, prisio2) %>%
-  summarise(n = n()) %>%
-  spread(prisio2, n)
+# frequências absolutas das variáveis
+bd_tab <- bd %>% filter(MODOENTR == 1) %>% 
+  select(prisio2,
+         sexo, 
+         raca, 
+         fx_etaria, 
+         escol,
+         detec,
+         bacilos,
+         classop,
+         gif_aval,
+         formaclini,
+         esq_ini,
+         ano_diag)
 
-
-# RAÇA/COR
-bd %>%
-  filter(MODOENTR == 1, !is.na(raca)) %>%
-  group_by(raca, prisio2) %>%
-  summarise(n = n()) %>%
-  spread(prisio2, n)
-
-
-# faixa etária
-bd %>%
-  filter(MODOENTR == 1, !is.na(fx_etaria)) %>%
-  group_by(fx_etaria, prisio2) %>%
-  summarise(n = n()) %>%
-  spread(prisio2, n)
-
-
-# ESCOLARIDADE
-bd %>%
-  filter(MODOENTR == 1, !is.na(escol)) %>%
-  group_by(escol, prisio2) %>%
-  summarise(n = n()) %>%
-  spread(prisio2, n)
-
-
-# MODO DE DETECÇÃO
-bd %>%
-  filter(MODOENTR == 1, !is.na(detec)) %>%
-  group_by(detec, prisio2) %>%
-  summarise(n = n()) %>%
-  spread(prisio2, n)
-
-
-# GIF
-bd %>%
-  filter(MODOENTR == 1, !is.na(gif_aval)) %>%
-  group_by(gif_aval, prisio2) %>%
-  summarise(n = n()) %>%
-  spread(prisio2, n)
-
-
-# BACILOSCOPIA
-bd %>%
-  filter(MODOENTR == 1, !is.na(bacilos)) %>%
-  group_by(bacilos, prisio2) %>%
-  summarise(n = n()) %>%
-  spread(prisio2, n)
-
-
-# CLASSIFICAÇÃO OPERACIONAL
-bd %>%
-  filter(MODOENTR == 1, !is.na(classop)) %>%
-  group_by(classop, prisio2) %>%
-  summarise(n = n()) %>%
-  spread(prisio2, n)
-
-
-# FORMA CLÍNICA
-bd %>%
-  filter(MODOENTR == 1, !is.na(formaclini)) %>%
-  group_by(formaclini, prisio2) %>%
-  summarise(n = n()) %>%
-  spread(prisio2, n)
-
-
-# ESQUEMA TERAPÊUTICO INICIAL
-bd %>%
-  filter(MODOENTR == 1, !is.na(esq_ini)) %>%
-  group_by(esq_ini, prisio2) %>%
-  summarise(n = n()) %>%
-  spread(prisio2, n)
-
-
-# Ano de diagnóstico
-bd %>%
-  filter(MODOENTR == 1) %>%
-  group_by(ano_diag, prisio2) %>%
-  summarise(n = n()) %>%
-  spread(prisio2, n)
-
-
-# UF
-bd %>% 
-  filter(MODOENTR == 1, prisio2 == "PPL") %>% 
-  group_by(ufres, ano_diag) %>%
-  summarize(n = n()) %>% 
-  spread(ano_diag, n) %>% 
-  kable() %>% 
-  print(n = 1e3)
-
+map(bd_tab, ~ table(., bd_tab$prisio2))
 
 
 ##########################################################
@@ -109,35 +28,62 @@ bd4 <- bd %>%
   summarize(n = n())
 
 
-bd4$ufres2 <- ifelse(
-  bd4$ufres == '11', 'RO',  
-  ifelse(bd4$ufres =='12', 'AC',  
-         ifelse(bd4$ufres =='13', 'AM',  
-                ifelse(bd4$ufres =='14',  'RR', 
-                       ifelse(bd4$ufres == '15', 'PA', 
-                              ifelse(bd4$ufres =='16',  'AP', 
-                                     ifelse(bd4$ufres =='17', 'TO', 
-                                            ifelse(bd4$ufres =='21', 'MA',  
-                                                   ifelse(bd4$ufres =='22', 'PI',  
-                                                          ifelse(bd4$ufres =='23', 'CE',  
-                                                                 ifelse(bd4$ufres =='24', 'RN',  
-                                                                        ifelse(bd4$ufres =='25', 'PB',  
-                                                                               ifelse(bd4$ufres =='26', 'PE',         
-                                                                                      ifelse(bd4$ufres =='27', 'AL',       
-                                                                                             ifelse(bd4$ufres =='28', 'SE',        
-                                                                                                    ifelse(bd4$ufres == '29', 'BA', 
-                                                                                                           ifelse(bd4$ufres == '31', 'MG', 
-                                                                                                                  ifelse(bd4$ufres == '32','ES',  
-                                                                                                                         ifelse(bd4$ufres == '33', 'RJ', 
-                                                                                                                                ifelse(bd4$ufres == '35','SP',  
-                                                                                                                                       ifelse(bd4$ufres == '41', 'PR', 
-                                                                                                                                              ifelse(bd4$ufres == '42', 'SC', 
-                                                                                                                                                     ifelse(bd4$ufres =='43', 'RS', 
-                                                                                                                                                            ifelse(bd4$ufres == '50', 'MS', 
-                                                                                                                                                                   ifelse(bd4$ufres == '51', 'MT', 
-                                                                                                                                                                          ifelse(bd4$ufres == '52', 'GO', 
-                                                                                                                                                                                 ifelse(bd4$ufres =='53',  'DF', 
-                                                                                                                                                                                        NA)))))))))))))))))))))))))))
+bd4$ufres2 <- ifelse(bd4$ufres == '11', 'RO',
+                     ifelse(bd4$ufres == '12', 'AC',
+                            ifelse(
+                              bd4$ufres == '13', 'AM',
+                              ifelse(bd4$ufres == '14',  'RR',
+                                     ifelse(
+                                       bd4$ufres == '15', 'PA',
+                                       ifelse(bd4$ufres == '16',  'AP',
+                                              ifelse(
+                                                bd4$ufres == '17', 'TO',
+                                                ifelse(bd4$ufres == '21', 'MA',
+                                                       ifelse(
+                                                         bd4$ufres == '22', 'PI',
+                                                         ifelse(bd4$ufres ==
+                                                                  '23', 'CE',
+                                                                ifelse(
+                                                                  bd4$ufres == '24', 'RN',
+                                                                  ifelse(bd4$ufres ==
+                                                                           '25', 'PB',
+                                                                         ifelse(
+                                                                           bd4$ufres == '26', 'PE',
+                                                                           ifelse(bd4$ufres ==
+                                                                                    '27', 'AL',
+                                                                                  ifelse(
+                                                                                    bd4$ufres == '28', 'SE',
+                                                                                    ifelse(bd4$ufres == '29', 'BA',
+                                                                                           ifelse(
+                                                                                             bd4$ufres == '31', 'MG',
+                                                                                             ifelse(bd4$ufres == '32', 'ES',
+                                                                                                    ifelse(
+                                                                                                      bd4$ufres == '33', 'RJ',
+                                                                                                      ifelse(bd4$ufres == '35', 'SP',
+                                                                                                             ifelse(
+                                                                                                               bd4$ufres == '41', 'PR',
+                                                                                                               ifelse(bd4$ufres == '42', 'SC',
+                                                                                                                      ifelse(
+                                                                                                                        bd4$ufres == '43', 'RS',
+                                                                                                                        ifelse(bd4$ufres == '50', 'MS',
+                                                                                                                               ifelse(
+                                                                                                                                 bd4$ufres == '51', 'MT',
+                                                                                                                                 ifelse(bd4$ufres == '52', 'GO',
+                                                                                                                                        ifelse(bd4$ufres ==
+                                                                                                                                                 '53',  'DF',
+                                                                                                                                               NA))
+                                                                                                                               ))
+                                                                                                                      ))
+                                                                                                             ))
+                                                                                                    ))
+                                                                                           ))
+                                                                                  ))
+                                                                         ))
+                                                                ))
+                                                       ))
+                                              ))
+                                     ))
+                            )))
 
 
 
@@ -164,53 +110,79 @@ class(bd3)
 class(bd3$ufres2)
 bd3 <- as.data.frame(bd3)
 
-bd3$ufres2 <- ifelse(
-  bd3$ufres == '11', 'RO',  
-  ifelse(bd3$ufres =='12', 'AC',  
-         ifelse(bd3$ufres =='13', 'AM',  
-                ifelse(bd3$ufres =='14',  'RR', 
-                       ifelse(bd3$ufres == '15', 'PA', 
-                              ifelse(bd3$ufres =='16',  'AP', 
-                                     ifelse(bd3$ufres =='17', 'TO', 
-                                            ifelse(bd3$ufres =='21', 'MA',  
-                                                   ifelse(bd3$ufres =='22', 'PI',  
-                                                          ifelse(bd3$ufres =='23', 'CE',  
-                                                                 ifelse(bd3$ufres =='24', 'RN',  
-                                                                        ifelse(bd3$ufres =='25', 'PB',  
-                                                                               ifelse(bd3$ufres =='26', 'PE',         
-                                                                                      ifelse(bd3$ufres =='27', 'AL',       
-                                                                                             ifelse(bd3$ufres =='28', 'SE',        
-                                                                                                    ifelse(bd3$ufres == '29', 'BA', 
-                                                                                                           ifelse(bd3$ufres == '31', 'MG', 
-                                                                                                                  ifelse(bd3$ufres == '32','ES',  
-                                                                                                                         ifelse(bd3$ufres == '33', 'RJ', 
-                                                                                                                                ifelse(bd3$ufres == '35','SP',  
-                                                                                                                                       ifelse(bd3$ufres == '41', 'PR', 
-                                                                                                                                              ifelse(bd3$ufres == '42', 'SC', 
-                                                                                                                                                     ifelse(bd3$ufres =='43', 'RS', 
-                                                                                                                                                            ifelse(bd3$ufres == '50', 'MS', 
-                                                                                                                                                                   ifelse(bd3$ufres == '51', 'MT', 
-                                                                                                                                                                          ifelse(bd3$ufres == '52', 'GO', 
-                                                                                                                                                                                 ifelse(bd3$ufres =='53',  'DF', 
-                                                                                                                                                                                        NA)))))))))))))))))))))))))))
-
+bd3$ufres2 <- ifelse(bd3$ufres == '11', 'Rondônia',
+                     ifelse(bd3$ufres == '12', 'Acre',
+                            ifelse(
+                              bd3$ufres == '13', 'Amazonas',
+                              ifelse(bd3$ufres == '14',  'Roraima',
+                                     ifelse(
+                                       bd3$ufres == '15', 'Pará',
+                                       ifelse(bd3$ufres == '16',  'Amapá',
+                                              ifelse(
+                                                bd3$ufres == '17', 'Tocantins',
+                                                ifelse(bd3$ufres == '21', 'Maranhão',
+                                                       ifelse(
+                                                         bd3$ufres == '22', 'Piauí',
+                                                         ifelse(bd3$ufres ==
+                                                                  '23', 'Ceará',
+                                                                ifelse(
+                                                                  bd3$ufres == '24', 'Rio Grande do Norte',
+                                                                  ifelse(bd3$ufres ==
+                                                                           '25', 'Paraíba',
+                                                                         ifelse(
+                                                                           bd3$ufres == '26', 'Pernambuco',
+                                                                           ifelse(bd3$ufres ==
+                                                                                    '27', 'Alagoas',
+                                                                                  ifelse(
+                                                                                    bd3$ufres == '28', 'Ssergipe',
+                                                                                    ifelse(bd3$ufres == '29', 'Bahia',
+                                                                                           ifelse(
+                                                                                             bd3$ufres == '31', 'Minas Gerais',
+                                                                                             ifelse(bd3$ufres == '32', 'Espírito Santo',
+                                                                                                    ifelse(
+                                                                                                      bd3$ufres == '33', 'Rio de Janeiro',
+                                                                                                      ifelse(bd3$ufres == '35', 'São Paulo',
+                                                                                                             ifelse(
+                                                                                                               bd3$ufres == '41', 'Paraná',
+                                                                                                               ifelse(bd3$ufres == '42', 'Santa Catarina',
+                                                                                                                      ifelse(
+                                                                                                                        bd3$ufres == '43', 'Rio Grande do Sul',
+                                                                                                                        ifelse(bd3$ufres == '50', 'Mato Grosso do Sul',
+                                                                                                                               ifelse(
+                                                                                                                                 bd3$ufres == '51', 'Mato Grosso',
+                                                                                                                                 ifelse(bd3$ufres == '52', 'Goiás',
+                                                                                                                                        ifelse(bd3$ufres ==
+                                                                                                                                                 '53',  'Distrito Federal',
+                                                                                                                                               NA))
+                                                                                                                               ))
+                                                                                                                      ))
+                                                                                                             ))
+                                                                                                    ))
+                                                                                           ))
+                                                                                  ))
+                                                                         ))
+                                                                ))
+                                                       ))
+                                              ))
+                                     ))
+                            )))
 
 bd3
 
-cols <- c("RO" = "gray", 
-          "PA" = "royalblue",
-          "TO" = "gray", 
-          "MA" = "firebrick",
-          "PI" = "gray", 
-          "PE" = "gray",
-          "MG" = "gray", 
-          "ES" = "firebrick",
-          "RJ" = "gray",
-          "SP" = "firebrick",
-          "PR" = "gray",
-          "MS" = "gray",
-          "MT" = "firebrick",
-          "GO" = "gray"
+cols <- c("Rondônia" = "gray", 
+          "Pará" = "royalblue",
+          "Tocantins" = "gray", 
+          "Maranhão" = "firebrick",
+          "Piauí" = "gray", 
+          "Pernambuco" = "gray",
+          "Minas Gerais" = "gray", 
+          "Espírito Santo" = "firebrick",
+          "Rio de Janeiro" = "gray",
+          "São Paulo" = "firebrick",
+          "Paraná" = "gray",
+          "Mato Grosso do Sul" = "gray",
+          "Mato Grosso" = "firebrick",
+          "Goiás" = "gray"
           )
 
 
@@ -221,6 +193,7 @@ newggslopegraph(dataframe = bd3,
                 Title = "",
                 SubTitle = "",
                 Caption = "Fonte: Sinan/SVS/MS.",
+                CaptionJustify = "left",
                 XTextSize = 24,    # Size of the times
                 YTextSize = 5,     # Size of the groups
                 LineThickness = 1.5,
@@ -230,7 +203,7 @@ newggslopegraph(dataframe = bd3,
                 #DataLabelLineSize = 0.1
                 )
 
-
+?newggslopegraph
 
 ################################################################
 

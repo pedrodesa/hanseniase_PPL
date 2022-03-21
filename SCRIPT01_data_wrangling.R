@@ -21,8 +21,8 @@ bd <- bd %>% select(DT_NOTIFIC, ID_MUNICIP,
                     DTULTCOMP, CLASSATUAL, 
                     AVAL_ATU_N, ESQ_ATU_N, 
                     DOSE_RECEB, EPIS_RACIO, 
-                    DTMUDESQ, CONTEXAM, DTALTA_N, 
-                    TPALTA_N
+                    DTMUDESQ, CONTEXAM, 
+                    DTALTA_N, TPALTA_N
 )
 
 
