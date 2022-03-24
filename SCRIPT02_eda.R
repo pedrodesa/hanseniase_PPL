@@ -1,8 +1,8 @@
 ####################################
 glimpse(bd)
 
-# frequências absolutas das variáveis
-bd_tab <- bd %>% filter(MODOENTR == 1) %>% 
+# Variáveis sociodemográficas, clínicas e epidemiológicas
+bd_tab <- bd %>% filter(MODOENTR == 1, ano_diag %in% c(2019, 2020)) %>% 
   select(prisio2,
          sexo, 
          raca, 
@@ -23,7 +23,7 @@ map(bd_tab, ~ table(., bd_tab$prisio2))
 
 # Tree Map
 bd4 <- bd %>% 
-  filter(MODOENTR == 1, prisio2 == "PPL") %>% 
+  filter(MODOENTR == 1, prisio2 == "PPL", ano_diag %in% c(2019, 2020)) %>% 
   group_by(ufres) %>%
   summarize(n = n())
 
@@ -99,7 +99,7 @@ ggplot(bd4, aes(area = n, fill = n, label = ufres2)) +
 #################################################
 
 bd3 <- bd %>% 
-  filter(MODOENTR == 1, prisio2 == "PPL") %>% 
+  filter(MODOENTR == 1, prisio2 == "PPL", ano_diag %in% c(2019, 2020)) %>% 
   group_by(ufres, ano_diag) %>%
   summarize(n = n())
 

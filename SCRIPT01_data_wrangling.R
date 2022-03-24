@@ -28,7 +28,7 @@ bd <- bd %>% select(DT_NOTIFIC, ID_MUNICIP,
 
 # Renomeando as variáveis chaves para realizar o merge
 bd <- bd %>% 
-  rename(Uni_not = ID_UNIDADE,   # renoamendo variável de unidade de entrada
+  mutate(Uni_not = ID_UNIDADE,   # renoamendo variável de unidade de entrada
          Uni_At = ID_UNID_AT)    # renoamendo variável de unidade de acompanhamento
 
 
@@ -37,7 +37,7 @@ bd$DT_DIAG <- as.Date(bd$DT_DIAG, format = "%d/%m/%Y")
 
 #filtrar pelos anos de análise
 bd <- mutate(bd, ano_diag = year(bd$DT_DIAG)) %>% 
-  filter(ano_diag >= 2019 & ano_diag <= 2020)
+  filter(ano_diag >= 2017 & ano_diag <= 2020)
 
 
 # MERGE (JOIN) --------------------------------------------------------------
@@ -99,8 +99,8 @@ bd$prisio2 <- ifelse(
   ifelse(bd$prisio == 1, 'PPL', NA))
 
 # Banco de dados apenas com a PPL
-# bd2 <- bd %>%
-#   filter(prisio == 1)
+bd <- bd %>% 
+  filter(prisio == 1)
 
 
 # Retirada dos erros de diagnóstico
@@ -130,6 +130,17 @@ bd$ID_MN_RESI <- as.character(as.factor(bd$ID_MN_RESI))
 bd <- bd %>% mutate(ufres = str_sub(bd$ID_MN_RESI, 0, 2))
 
 bd$ufres <- as.factor(bd$ufres)
+
+
+# Aqui é criada uma variável com os códigos das UFs
+# Criação da variável ufresat a partir da var MUNIRESAT
+class(bd$MUNIRESAT)
+
+bd$MUNIRESAT <- as.character(as.factor(bd$MUNIRESAT))
+
+bd <- bd %>% mutate(ufresat = str_sub(bd$MUNIRESAT, 0, 2))
+
+bd$ufresat <- as.factor(bd$ufresat)
 
 
 # Organização das variáveis ------------------------------------------
