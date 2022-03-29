@@ -203,7 +203,6 @@ newggslopegraph(dataframe = bd3,
                 #DataLabelLineSize = 0.1
                 )
 
-?newggslopegraph
 
 ################################################################
 
